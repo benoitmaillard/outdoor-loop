@@ -1,0 +1,8 @@
+.app-container {
+    display: flex;
+}
+
+.map-container {
+    flex: 1;
+    height: 100vh;
+}
