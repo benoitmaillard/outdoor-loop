@@ -1,2 +1,12 @@
-<mgl-map [style]="style" [zoom]="[9]" [center]="[-74.5, 40]">
+<mgl-map
+  [style]="style"
+  [zoom]="[this.mapService.zoomLevel]"
+  [center]="this.mapService.center"
+  (mapClick)="onMapClick($event)"
+>
+  @for (waypoint of mapService.route.waypoints; track $index) {
+    <mgl-marker
+      [lngLat]="[waypoint.lon, waypoint.lat]"
+    ></mgl-marker>
+  }
 </mgl-map>

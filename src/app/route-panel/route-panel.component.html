@@ -1,0 +1,12 @@
+<div class="sidebar">
+  <h3>Map Controls</h3>
+  <!-- Add your controls like buttons, forms, etc. -->
+  <button (click)="zoomIn()">Zoom In</button>
+  <button (click)="zoomOut()">Zoom Out</button>
+  
+  <ul>
+    @for (waypoint of mapService.route.waypoints; track $index) {
+      <li>{{waypoint.lat}}, {{waypoint.lon}}</li>
+    }
+  </ul>
+</div>

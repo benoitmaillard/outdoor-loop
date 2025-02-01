@@ -1,25 +1,19 @@
 import { Injectable } from '@angular/core';
+import { Route } from './route.model';
+import { Node } from './node.model'
+import { OverpassService } from './overpass.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
-  private zoomLevel: number = 11;
-  private center: [number, number] = [7.17, 46.64];
+  public zoomLevel: number = 11;
+  public center: [number, number] = [7.17, 46.64];
+  public route: Route = new Route();
 
-  getZoom(): number {
-    return this.zoomLevel;
-  }
+  constructor(private overpassService: OverpassService) { }
 
-  setZoom(zoom: number): void {
-    this.zoomLevel = zoom;
-  }
-
-  getCenter(): [number, number] {
-    return this.center;
-  }
-
-  setCenter(center: [number, number]): void {
-    this.center = center;
+  addWayPoint(waypoint: Node) {
+    this.route.waypoints.push(waypoint);
   }
 }
