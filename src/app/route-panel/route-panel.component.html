@@ -5,7 +5,7 @@
   <button (click)="zoomOut()">Zoom Out</button>
   
   <ul>
-    @for (waypoint of mapService.route.waypoints; track $index) {
+    @for (waypoint of mapService.waypoints(); track $index) {
       <li>{{waypoint.lat}}, {{waypoint.lon}}</li>
     }
   </ul>

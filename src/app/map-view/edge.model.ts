@@ -1,4 +1,5 @@
 import { Way } from "./way.model";
+import { Node } from "./node.model";
 
 export interface Edge {
   from: Node;

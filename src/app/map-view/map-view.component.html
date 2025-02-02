@@ -4,9 +4,32 @@
   [center]="this.mapService.center"
   (mapClick)="onMapClick($event)"
 >
-  @for (waypoint of mapService.route.waypoints; track $index) {
+  @for (waypoint of this.mapService.waypoints(); track $index) {
     <mgl-marker
       [lngLat]="[waypoint.lon, waypoint.lat]"
     ></mgl-marker>
   }
+
+  <mgl-geojson-source id="oneline">
+    @for (subpath of pathGeometry(); track $index ) {
+      <mgl-feature [geometry]="{
+        type: 'LineString',
+        coordinates: subpath
+      }"> </mgl-feature>
+    }
+  </mgl-geojson-source>
+  <mgl-layer
+    id="route"
+    type="line"
+    source="oneline"
+    [layout]="{
+      'line-join': 'round',
+      'line-cap': 'round'
+    }"
+    [paint]="{
+      'line-color': '#888',
+      'line-width': 8
+    }"
+  >
+  </mgl-layer>
 </mgl-map>

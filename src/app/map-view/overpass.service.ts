@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, zip } from 'rxjs';
 import { Node } from "./node.model"
+import { Way } from './way.model';
+import { sqrdEuclDist } from './utils';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +30,18 @@ export class OverpassService {
       ) : null)
     )
   }
+
+  // TODO should we return OverpassWay[] or Way[]? Maybe it lacks consistency
+  getNearestWays(lat: number, lon: number, radius: number): Observable<OverpassWay[]> {
+    const query = `[out:json];way["highway"](around:${radius}, ${lat}, ${lon});out geom;`;
+    const response = this.http.get<OverpassResponse>(this.overpassUrl, {
+      params: { data: query }
+    });
+
+    return response.pipe(
+      map(response => response.elements as OverpassWay[])
+    );
+  }
 }
 
 function nodesOf(way: OverpassWay): Node[] {
@@ -41,12 +55,6 @@ function nodesOf(way: OverpassWay): Node[] {
     nodes.push(node);
   }
   return nodes;
-}
-
-function sqrdEuclDist(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const dLat = lat2 - lat1;
-  const dLon = lon2 - lon1;
-  return dLat * dLat + dLon * dLon;
 }
 
 interface OverpassResponse {

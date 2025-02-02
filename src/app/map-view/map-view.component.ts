@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { EventData, MapComponent, MarkerComponent } from '@maplibre/ngx-maplibre-gl';
+import { Component, computed, Input } from '@angular/core';
+import { EventData, FeatureComponent, GeoJSONSourceComponent, LayerComponent, MapComponent, MarkerComponent } from '@maplibre/ngx-maplibre-gl';
 import {
   MapMouseEvent,
   RasterLayerSpecification,
@@ -8,15 +8,17 @@ import {
 } from 'maplibre-gl';
 import { MapService } from './map.service';
 import { OverpassService } from './overpass.service';
+import { Edge } from './edge.model';
 
 @Component({
   selector: 'app-map-view',
-  imports: [MapComponent, MarkerComponent],
+  imports: [MapComponent, MarkerComponent, LayerComponent, GeoJSONSourceComponent, FeatureComponent],
   templateUrl: './map-view.component.html',
   styleUrl: './map-view.component.css'
 })
 export class MapViewComponent {
   style: string | StyleSpecification;
+  pathGeometry = computed(() => this.lineStringCoordinates(this.mapService.edges()))
 
   constructor(
     public mapService: MapService,
@@ -36,6 +38,13 @@ export class MapViewComponent {
         
         // TODO if there is no node nearby, we should display an warning message
       });
+  }
+
+  lineStringCoordinates(path: Edge[][]): number[][][] {
+    return path.map(edges => [
+      [edges[0].from.lon, edges[0].from.lat],
+      ...edges.map(e => [e.to.lon, e.to.lat])
+    ])
   }
 
   initializeMapStyle() {
