@@ -17,4 +17,8 @@ export class RoutePanelComponent {
   zoomOut() {
     this.mapService.zoomLevel--;
   }
+
+  removeWayPoint(index: number) {
+    this.mapService.removeWayPoint(index);
+  }
 }

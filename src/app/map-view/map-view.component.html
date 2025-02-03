@@ -11,7 +11,9 @@
   }
 
   <mgl-geojson-source id="oneline">
-    @for (subpath of pathGeometry(); track $index ) {
+    <!-- here we need to track some path-specific data, as 'geometry' is not responsive to updates -->
+    <!-- TODO we probably need to track something else, as this is not robust if the first coordinates are the same -->
+    @for (subpath of pathGeometry(); track subpath[1][0] ) {
       <mgl-feature [geometry]="{
         type: 'LineString',
         coordinates: subpath

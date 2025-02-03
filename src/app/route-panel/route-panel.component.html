@@ -6,7 +6,9 @@
   
   <ul>
     @for (waypoint of mapService.waypoints(); track $index) {
-      <li>{{waypoint.lat}}, {{waypoint.lon}}</li>
+      <li>{{waypoint.lat}}, {{waypoint.lon}}
+        <button (click)="removeWayPoint($index)">Remove</button>
+      </li>
     }
   </ul>
 </div>

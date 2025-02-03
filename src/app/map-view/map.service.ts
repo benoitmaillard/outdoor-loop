@@ -29,4 +29,19 @@ export class MapService {
     }
     this.waypoints.update(old => [...old, waypoint]);
   }
+
+  removeWayPoint(index: number) {
+    const oldLength = this.waypoints().length;
+    this.waypoints.update(old => [...old.slice(0, index), ...old.slice(index+1, old.length)]);
+    
+    if (index == 0) {
+      this.edges.update(old => old.slice(1, old.length));
+    } else if (index == oldLength - 1) {
+      this.edges.update(old => old.slice(0, old.length - 1));
+    } else {
+      this.routingService.computePath(this.waypoints()[index - 1], this.waypoints()[index]).subscribe(
+        newEdges => this.edges.update(old => [...old.slice(0, index - 1), newEdges, ...old.slice(index + 1, old.length)])
+      )
+    }    
+  }
 }
