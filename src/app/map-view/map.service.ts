@@ -39,6 +39,7 @@ export class MapService {
     } else if (index == oldLength - 1) {
       this.edges.update(old => old.slice(0, old.length - 1));
     } else {
+      // TODO we should probably have a mechanism to avoid inconsistencies after an API call (lock? index table? linkedlist?)
       this.routingService.computePath(this.waypoints()[index - 1], this.waypoints()[index]).subscribe(
         newEdges => this.edges.update(old => [...old.slice(0, index - 1), newEdges, ...old.slice(index + 1, old.length)])
       )
