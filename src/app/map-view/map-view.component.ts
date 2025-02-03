@@ -18,7 +18,6 @@ import { Edge } from './edge.model';
 })
 export class MapViewComponent {
   style: string | StyleSpecification;
-  pathGeometry = computed(() => this.lineStringCoordinates(this.mapService.edges()))
 
   constructor(
     public mapService: MapService,
@@ -40,11 +39,11 @@ export class MapViewComponent {
       });
   }
 
-  lineStringCoordinates(path: Edge[][]): number[][][] {
-    return path.map(edges => [
-      [edges[0].from.lon, edges[0].from.lat],
-      ...edges.map(e => [e.to.lon, e.to.lat])
-    ])
+  coordinatesFromSubpath(edges: Edge[]): number[][] {
+    return [
+          [edges[0].from.lon, edges[0].from.lat],
+          ...edges.map(e => [e.to.lon, e.to.lat])
+        ]
   }
 
   initializeMapStyle() {

@@ -5,7 +5,8 @@
   <button (click)="zoomOut()">Zoom Out</button>
   
   <ul>
-    @for (waypoint of mapService.waypoints(); track $index) {
+    <!-- TODO what is the right expression for track? both waypoint.id or $index have pros and cons -->
+    @for (waypoint of mapService.waypoints(); track waypoint.id) {
       <li>{{waypoint.lat}}, {{waypoint.lon}}
         <button (click)="removeWayPoint($index)">Remove</button>
       </li>

@@ -4,7 +4,7 @@
   [center]="this.mapService.center"
   (mapClick)="onMapClick($event)"
 >
-  @for (waypoint of this.mapService.waypoints(); track $index) {
+  @for (waypoint of this.mapService.waypoints(); track waypoint.id) {
     <mgl-marker
       [lngLat]="[waypoint.lon, waypoint.lat]"
     ></mgl-marker>
@@ -12,11 +12,11 @@
 
   <mgl-geojson-source id="oneline">
     <!-- here we need to track some path-specific data, as 'geometry' is not responsive to updates -->
-    <!-- TODO we probably need to track something else, as this is not robust if the first coordinates are the same -->
-    @for (subpath of pathGeometry(); track subpath[1][0] ) {
+    <!-- TODO this is not great as this will create new DOM nodes at every call of pathGeometry -->
+    @for (subpath of mapService.edges(); track subpath ) {
       <mgl-feature [geometry]="{
         type: 'LineString',
-        coordinates: subpath
+        coordinates: coordinatesFromSubpath(subpath)
       }"> </mgl-feature>
     }
   </mgl-geojson-source>
