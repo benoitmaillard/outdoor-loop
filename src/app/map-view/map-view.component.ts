@@ -2,6 +2,7 @@ import { Component, computed, Input } from '@angular/core';
 import { EventData, FeatureComponent, GeoJSONSourceComponent, LayerComponent, MapComponent, MarkerComponent } from '@maplibre/ngx-maplibre-gl';
 import {
   MapMouseEvent,
+  Marker,
   RasterLayerSpecification,
   RasterSourceSpecification,
   StyleSpecification,
@@ -34,6 +35,17 @@ export class MapViewComponent {
       .subscribe(node => {
         if (node)
           this.mapService.addWayPoint(node); 
+        
+        // TODO if there is no node nearby, we should display an warning message
+      });
+  }
+
+  onDragEnd(event: Marker, index: number) {
+    this.overpassService
+      .getNearestRoadNode(event.getLngLat().lat, event.getLngLat().lng)
+      .subscribe(node => {
+        if (node)
+          this.mapService.moveWayPoint(node, index);
         
         // TODO if there is no node nearby, we should display an warning message
       });

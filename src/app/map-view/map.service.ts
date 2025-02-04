@@ -4,6 +4,7 @@ import { Node } from './node.model'
 import { OverpassService } from './overpass.service';
 import { RoutingService } from './routing.service';
 import { Edge } from './edge.model';
+import { zip } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -44,5 +45,22 @@ export class MapService {
         newEdges => this.edges.update(old => [...old.slice(0, index - 1), newEdges, ...old.slice(index + 1, old.length)])
       )
     }    
+  }
+
+  moveWayPoint(replacement: Node, index: number) {
+    this.waypoints.update(old => [...old.slice(0, index), replacement, ...old.slice(index+1, old.length)]);
+
+    if (index == 0) {
+      this.routingService.computePath(replacement, this.waypoints()[index + 1])
+        .subscribe(newEdges => this.edges.update(old => [newEdges, ...old.slice(index + 1, old.length)]));
+    } else if (index == this.waypoints().length - 1) {
+      this.routingService.computePath(this.waypoints()[index - 1], replacement)
+        .subscribe(newEdges => this.edges.update(old => [...old.slice(0, index - 1), newEdges]));
+    } else {
+      zip(
+        this.routingService.computePath(this.waypoints()[index - 1], replacement),
+        this.routingService.computePath(replacement, this.waypoints()[index + 1])
+      ).subscribe(res => this.edges.update(old => [...old.slice(0, index - 1), ...res, ...old.slice(index + 1, old.length)]))
+    }
   }
 }

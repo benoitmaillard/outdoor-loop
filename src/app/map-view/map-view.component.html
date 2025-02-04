@@ -7,6 +7,8 @@
   @for (waypoint of this.mapService.waypoints(); track waypoint.id) {
     <mgl-marker
       [lngLat]="[waypoint.lon, waypoint.lat]"
+      [draggable]="true"
+      (markerDragEnd)="onDragEnd($event, $index)"
     ></mgl-marker>
   }
 
