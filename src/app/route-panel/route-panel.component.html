@@ -9,7 +9,7 @@
       <option>Gravel</option>
       <option>Running</option>
     </select>
-    <button class="btn btn-primary join-item">Edit Profiles</button>
+    <button class="btn btn-primary join-item" onclick="my_modal.showModal()">Edit Profiles</button>
   </div>
   
   <div class="divider"></div>
@@ -105,4 +105,86 @@
       </div>
     </div>
   </div>
+
+<dialog id="my_modal" class="modal">
+  <div class="modal-box">
+    <h2 class="text-lg font-semibold">Edit Profiles</h2>
+
+    <div class="space-y-4 mt-4">
+      <label class="form-control w-full">
+        <div class="label"><span class="label-text">Choose the profile to edit</span></div>
+        <div class="flex gap-2">
+
+          <select class="select select-bordered w-1/2" id="optionSelect">
+            <option disabled>Road bike</option>
+            <option disabled>Gravel</option>
+            <option disabled>Running</option>
+            <option>X-Wing</option>
+          </select>
+        
+          <div class="join w-1/2">
+            <input type="text" id="newOptionInput" class="input input-bordered join-item w-full" placeholder="Add a new profile" />
+            <button type="button" class="btn btn-primary join-item" onclick="addNewOption()">Add</button>
+          </div>
+        </div>
+      </label>
+
+      <h2 class="text-lg font-semibold">Profile options</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  
+        <label class="form-control w-full">
+          <div class="label"><span class="label-text">Asphalt</span></div>
+          <input type="range" min="1" max="100" value="50" class="range range-xs range-primary" />
+        </label>
+
+        <label class="form-control w-full">
+          <div class="label"><span class="label-text">Dirt</span></div>
+          <input type="range" min="1" max="100" value="50" class="range range-xs range-primary" />
+        </label>
+
+        <label class="form-control w-full">
+          <div class="label"><span class="label-text">Gravel</span></div>
+          <input type="range" min="1" max="100" value="50" class="range range-xs range-primary" />
+        </label>
+
+        <label class="form-control w-full">
+          <div class="label"><span class="label-text">Cobbles</span></div>
+          <input type="range" min="1" max="100" value="50" class="range range-xs range-primary" />
+        </label>
+      
+        <label class="flex items-center gap-2">
+          <input type="checkbox" class="checkbox checkbox-primary" />
+          <span>Avoid primary roads</span>
+        </label>
+
+        <label class="flex items-center gap-2">
+          <input type="checkbox" class="checkbox checkbox-primary" />
+          <span>Avoid secondary roads</span>
+        </label>
+      
+        <label class="form-control w-full">
+          <div class="label"><span class="label-text">Average speed (km/h)</span></div>
+          <input type="number" placeholder="25" class="input input-bordered w-full" />
+        </label>
+      
+        <!-- <label class="form-control w-full">
+          <div class="label"><span class="label-text">Average speed (km/h)</span></div>
+          <input type="number" placeholder="30" class="input input-bordered w-full" />
+        </label> -->
+      
+      </div>
+
+      <!-- Buttons -->
+      <div class="modal-action">
+        <button class="btn btn-error">Delete profile</button>
+        <form method="dialog">
+          <button class="btn btn-primary">Done</button>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</dialog>
+
 </aside>
