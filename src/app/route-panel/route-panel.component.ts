@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MapService } from './../map-view/map.service';
 
 @Component({
   selector: 'app-route-panel',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './route-panel.component.html',
   styleUrl: './route-panel.component.css'
 })
