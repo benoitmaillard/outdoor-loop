@@ -42,8 +42,6 @@ export class RoutingService {
           wayMap.set(way.id, way);
         });
 
-        console.log(graph.size);
-
         const nodes =  astar.bidirectional(
           graph,
           source.id.toString(), // Graphology needs a string for A-star, this is probably a bug
