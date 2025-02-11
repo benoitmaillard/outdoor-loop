@@ -47,10 +47,12 @@
     </div>
   </nav>
   
-  <div class="flex flex-1">
-    <app-route-panel></app-route-panel>    
+  <div class="flex flex-1 overflow-y-hidden w-full">
+    <div class="overflow-y-scroll">
+      <app-route-panel></app-route-panel>
+    </div>
 
-    <div class="flex-1 relative">
+    <div class="flex-1">
       <app-map-view></app-map-view>
     </div>
   </div>
