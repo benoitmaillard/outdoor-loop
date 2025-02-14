@@ -55,7 +55,7 @@ export class MapService {
     } else if (index === waypoints.length - 1) {
       this.paths.update(old => old.slice(0, -1));
     } else {
-      this.computePath(waypoints[index - 1], waypoints[index])
+      this.computePath(waypoints[index - 1], waypoints[index + 1])
         .subscribe(newPath => this.updatePaths(index, [newPath]));
     }
   }
