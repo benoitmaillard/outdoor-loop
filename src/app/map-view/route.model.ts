@@ -1,8 +1,8 @@
 import { Edge } from "./edge.model";
-import { Node } from "./node.model"
+import { Point } from "./point.model"
 
 export class Route {
-  waypoints: Node[] = [];
+  waypoints: Point[] = [];
   path: Edge[][] = [];
 
   // TODO add method to compute length, surface, elevation, etc

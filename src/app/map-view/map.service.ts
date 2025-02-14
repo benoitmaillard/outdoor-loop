@@ -1,10 +1,8 @@
 import { Injectable, signal } from '@angular/core';
-import { Route } from './route.model';
-import { Node } from './node.model'
-import { OverpassService } from './overpass.service';
-import { RoutingService } from './routing.service';
-import { Edge } from './edge.model';
 import { zip } from 'rxjs';
+import { GraphHopperService } from '../graphhopper/graphhopper.service';
+import { RoutePath } from '../graphhopper/route-path.model';
+import { Point } from './point.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,20 +10,21 @@ import { zip } from 'rxjs';
 export class MapService {
   public zoomLevel: number = 11;
   public center: [number, number] = [7.17, 46.64];
-  public waypoints = signal<Node[]>([]);
-  public edges = signal<Edge[][]>([])
+  public waypoints = signal<Point[]>([]);
+  public paths = signal<RoutePath[]>([])
 
   constructor(
-    private overpassService: OverpassService,
-    private routingService: RoutingService
+    private graphhopperService: GraphHopperService
   ) { }
 
-  addWayPoint(waypoint: Node) {
+  addWayPoint(waypoint: Point) {
     if (this.waypoints().length > 0) {
       const last = this.waypoints().at(-1);
       
-      this.routingService.computePath(last, waypoint).subscribe(
-        newEdges => this.edges.update(old => [...old, newEdges])
+      // TODO we have to handle the 400 bad request error in case there is no suitable point nearby
+      // TODO we should also probably update the point to the snapped point
+      this.graphhopperService.computePath([last, waypoint]).subscribe(
+        newPath => this.paths.update(old => [...old, newPath])
       )
     }
     this.waypoints.update(old => [...old, waypoint]);
@@ -36,31 +35,31 @@ export class MapService {
     this.waypoints.update(old => [...old.slice(0, index), ...old.slice(index+1, old.length)]);
     
     if (index == 0) {
-      this.edges.update(old => old.slice(1, old.length));
+      this.paths.update(old => old.slice(1, old.length));
     } else if (index == oldLength - 1) {
-      this.edges.update(old => old.slice(0, old.length - 1));
+      this.paths.update(old => old.slice(0, old.length - 1));
     } else {
       // TODO we should probably have a mechanism to avoid inconsistencies after an API call (lock? index table? linkedlist?)
-      this.routingService.computePath(this.waypoints()[index - 1], this.waypoints()[index]).subscribe(
-        newEdges => this.edges.update(old => [...old.slice(0, index - 1), newEdges, ...old.slice(index + 1, old.length)])
+      this.graphhopperService.computePath([this.waypoints()[index - 1], this.waypoints()[index]]).subscribe(
+        newPath => this.paths.update(old => [...old.slice(0, index - 1), newPath, ...old.slice(index + 1, old.length)])
       )
     }    
   }
 
-  moveWayPoint(replacement: Node, index: number) {
+  moveWayPoint(replacement: Point, index: number) {
     this.waypoints.update(old => [...old.slice(0, index), replacement, ...old.slice(index+1, old.length)]);
 
     if (index == 0) {
-      this.routingService.computePath(replacement, this.waypoints()[index + 1])
-        .subscribe(newEdges => this.edges.update(old => [newEdges, ...old.slice(index + 1, old.length)]));
+      this.graphhopperService.computePath([replacement, this.waypoints()[index + 1]])
+        .subscribe(newPath => this.paths.update(old => [newPath, ...old.slice(index + 1, old.length)]));
     } else if (index == this.waypoints().length - 1) {
-      this.routingService.computePath(this.waypoints()[index - 1], replacement)
-        .subscribe(newEdges => this.edges.update(old => [...old.slice(0, index - 1), newEdges]));
+      this.graphhopperService.computePath([this.waypoints()[index - 1], replacement])
+        .subscribe(newPath => this.paths.update(old => [...old.slice(0, index - 1), newPath]));
     } else {
       zip(
-        this.routingService.computePath(this.waypoints()[index - 1], replacement),
-        this.routingService.computePath(replacement, this.waypoints()[index + 1])
-      ).subscribe(res => this.edges.update(old => [...old.slice(0, index - 1), ...res, ...old.slice(index + 1, old.length)]))
+        this.graphhopperService.computePath([this.waypoints()[index - 1], replacement]),
+        this.graphhopperService.computePath([replacement, this.waypoints()[index + 1]])
+      ).subscribe(newPaths => this.paths.update(old => [...old.slice(0, index - 1), ...newPaths, ...old.slice(index + 1, old.length)]))
     }
   }
 }

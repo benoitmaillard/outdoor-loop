@@ -16,7 +16,7 @@
   
   <div class="space-y-2">
   <h2 class="text-lg font-semibold">Waypoints</h2>
-    @for (waypoint of mapService.waypoints(); track waypoint.id) {
+    @for (waypoint of mapService.waypoints(); track $index) {
       <div class="join w-full max-w-xs flex">
         <button class="btn btn-neutral join-item">{{ $index + 1 }}</button>
         <button class="btn btn-neutral join-item flex-1">

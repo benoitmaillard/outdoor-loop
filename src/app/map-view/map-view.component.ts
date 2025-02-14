@@ -30,25 +30,11 @@ export class MapViewComponent {
   }
 
   onMapClick(event: MapMouseEvent & EventData) {
-    this.overpassService
-      .getNearestRoadNode(event.lngLat.lat, event.lngLat.lng)
-      .subscribe(node => {
-        if (node)
-          this.mapService.addWayPoint(node); 
-        
-        // TODO if there is no node nearby, we should display an warning message
-      });
+    this.mapService.addWayPoint({lat: event.lngLat.lat, lon: event.lngLat.lng})
   }
 
   onDragEnd(event: Marker, index: number) {
-    this.overpassService
-      .getNearestRoadNode(event.getLngLat().lat, event.getLngLat().lng)
-      .subscribe(node => {
-        if (node)
-          this.mapService.moveWayPoint(node, index);
-        
-        // TODO if there is no node nearby, we should display an warning message
-      });
+    this.mapService.moveWayPoint({lat: event.getLngLat().lat, lon: event.getLngLat().lng}, index)
   }
 
   coordinatesFromSubpath(edges: Edge[]): number[][] {

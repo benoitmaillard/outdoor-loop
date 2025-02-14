@@ -4,6 +4,7 @@ import { map, Observable } from 'rxjs';
 import { RoutePath } from './route-path.model';
 import { GraphHopperResponse } from './graphhopper-response.model';
 import { environment } from '../../environments/environment';
+import { Point } from '../map-view/point.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { environment } from '../../environments/environment';
 export class GraphHopperService {
   constructor(private http: HttpClient) { }
   
-  computePath(waypoints: [number, number][]): Observable<RoutePath> {
+  computePath(waypoints: Point[]): Observable<RoutePath> {
     let params = new HttpParams()
       .set('profile', 'car')
       .set('format', 'json')
@@ -20,7 +21,7 @@ export class GraphHopperService {
       .append('details', 'surface')
     
     for (let point of waypoints) {
-      params = params.append('point', `${point[0]},${point[1]}`)
+      params = params.append('point', `${point.lat},${point.lon}`)
     }
 
     const response = this.http.get<GraphHopperResponse>(environment.routingApiUrl, {

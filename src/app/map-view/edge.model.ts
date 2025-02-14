@@ -1,9 +1,9 @@
 import { Way } from "./way.model";
-import { Node } from "./node.model";
+import { Point } from "./point.model";
 
 export interface Edge {
-  from: Node;
-  to: Node;
+  from: Point;
+  to: Point;
   distance: number;
   way: Way; // TODO replace by actual ref to Way object
 }

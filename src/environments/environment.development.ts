@@ -1,3 +1,3 @@
 export const environment = {
-  routingApiUrl: 'http://localhost:8989'
+  routingApiUrl: 'http://localhost:8989/route'
 };

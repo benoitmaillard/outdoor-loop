@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, zip } from 'rxjs';
-import { Node } from "./node.model"
+import { Point } from "./point.model"
 import { Way } from './way.model';
 import { sqrdEuclDist } from './utils';
 
@@ -13,7 +13,7 @@ export class OverpassService {
 
   constructor(private http: HttpClient) { }
 
-  getNearestRoadNode(lat: number, lon: number, radius: number = 200): Observable<Node> {
+  getNearestRoadNode(lat: number, lon: number, radius: number = 200): Observable<Point> {
     const query = `[out:json];way["highway"](around:${radius}, ${lat}, ${lon});out geom;`;
     const response = this.http.get<OverpassResponse>(this.overpassUrl, {
       params: { data: query }
@@ -44,8 +44,8 @@ export class OverpassService {
   }
 }
 
-function nodesOf(way: OverpassWay): Node[] {
-  const nodes: Node[] = []
+function nodesOf(way: OverpassWay): Point[] {
+  const nodes: Point[] = []
   for (let i = 0; i < way.nodes.length; i++) {
     const node = {
       id: way.nodes[i],
