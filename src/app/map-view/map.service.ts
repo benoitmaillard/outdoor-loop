@@ -38,7 +38,7 @@ export class MapService {
     const lastWaypoint = waypoints.at(-1);
     const path$ = lastWaypoint
       ? this.computePath(lastWaypoint, waypoint).pipe(map(path => [path]))
-      : this.computePath(waypoint, waypoint).pipe(map(() => []));
+      : this.computePath(waypoint, waypoint).pipe(map(path => [] as RoutePath[]));
 
     path$.subscribe(newPaths => {
       this.paths.update(old => [...old, ...newPaths]);
@@ -95,9 +95,9 @@ export class MapService {
 
   computePath(from: Point, target: Point): Observable<RoutePath> {
     return this.graphhopperService.computePath([from, target]).pipe(
-      catchError(error => {
-        console.log("Bad point!!"); // TODO replace with an error message
-        return throwError(() => error);
+      catchError(e => {
+        this.error.next("No valid point nearby")
+        return throwError(() => e);
       })
     );
   }

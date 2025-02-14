@@ -1,0 +1,7 @@
+<div class="toast absolute z-50 toast-top toast-center">
+  @for (msg of errorQueue; track msg) {
+  <div class="alert alert-error">
+    <span>{{ msg }}</span>
+  </div>
+  }
+</div>

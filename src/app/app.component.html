@@ -52,7 +52,8 @@
       <app-route-panel></app-route-panel>
     </div>
 
-    <div class="flex-1">
+    <div class="flex-1 relative">
+      <app-error-display [errorStream]="this.mapService.errorStream"></app-error-display>
       <app-map-view></app-map-view>
     </div>
   </div>
