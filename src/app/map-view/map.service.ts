@@ -14,7 +14,7 @@ export class MapService {
   public waypoints = signal<Point[]>([]);
   public paths = signal<RoutePath[]>([]);
   private error = new Subject<string>();
-  public aggregateDetails = computed(() => this.aggregatePathDetails('surface'));
+  public aggregateStats = computed(() => this.computeStats());
   public errorStream = this.error.asObservable();
 
   constructor(private graphhopperService: GraphHopperService) { }
@@ -109,7 +109,7 @@ export class MapService {
     for (let i = from; i < to; i++) {
       const start = routePath.points.coordinates[i];
       const end = routePath.points.coordinates[i+1];
-      dist += haversine(start[0], start[1], end[0], end[1]);
+      dist += haversine(start[1], start[0], end[1], end[0]);
     }
 
     return dist;
@@ -136,6 +136,14 @@ export class MapService {
         return prev;
       }, new Map<string, number>()
     );
+  }
+
+  computeStats() {
+    return {
+      'distance': this.paths().map(p => p.distance).reduce((p, c) => p + c, 0),
+      'time': this.paths().map(p => p.time).reduce((p, c) => p + c, 0),
+      'surface': this.aggregatePathDetails('surface'),
+    }
   }
 }
 

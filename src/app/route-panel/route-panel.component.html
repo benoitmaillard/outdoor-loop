@@ -54,12 +54,14 @@
     <div class="stats shadow w-full max-w-xs flex justify-between">
       <div class="stat w-1/2">
         <div class="stat-title">Distance</div>
-        <div class="stat-value text-lg">35.23 km</div>
+        <div class="stat-value text-lg">
+          {{ this.mapService.aggregateStats().distance / 1000 | number: '1.2-2' }} km
+        </div>
       </div>
     
       <div class="stat w-1/2">
         <div class="stat-title">Time</div>
-        <div class="stat-value text-lg">1 h 27 min</div>
+        <div class="stat-value text-lg">{{ this.mapService.aggregateStats().time / 1000 / 60 }}</div>
       </div>
     </div>
 
@@ -81,7 +83,7 @@
   
   <div class="space-y-2">
     <h2 class="text-lg font-semibold">Surfaces</h2>
-    @for (entry of this.mapService.aggregateDetails(); track entry[0]) {
+    @for (entry of this.mapService.aggregateStats().surface; track entry[0]) {
       <div class="stat">
         <div class="stat-title">{{ entry[0] }}</div>
         <div class="stat-value text-base">{{ entry[1] / 1000 | number: '1.3-3' }} km</div>
