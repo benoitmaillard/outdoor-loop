@@ -1,8 +1,9 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { BehaviorSubject, catchError, EMPTY, filter, Observable, Subject, throwError, zip, map } from 'rxjs';
 import { GraphHopperService } from '../graphhopper/graphhopper.service';
 import { RoutePath } from '../graphhopper/route-path.model';
 import { Point } from './point.model';
+import { haversine } from './utils';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class MapService {
   public waypoints = signal<Point[]>([]);
   public paths = signal<RoutePath[]>([]);
   private error = new Subject<string>();
+  public aggregateDetails = computed(() => this.aggregatePathDetails('surface'));
   public errorStream = this.error.asObservable();
 
   constructor(private graphhopperService: GraphHopperService) { }
@@ -101,4 +103,39 @@ export class MapService {
       })
     );
   }
+
+  distanceBetweenPoints(routePath: RoutePath, from: number, to: number) {
+    let dist = 0;
+    for (let i = from; i < to; i++) {
+      const start = routePath.points.coordinates[i];
+      const end = routePath.points.coordinates[i+1];
+      dist += haversine(start[0], start[1], end[0], end[1]);
+    }
+
+    return dist;
+  }
+
+  // returns the distance for each value of the given detail
+  detailDistanceByValue(routePath: RoutePath, key: string): Map<string, number> {
+    const grouped = new Map<string, number>();
+    for (let [from, to, value] of routePath.details[key]) {
+      const distance = this.distanceBetweenPoints(routePath, from, to);
+      const before = grouped.has(value) ? grouped.get(value) : 0;
+      grouped.set(value, before + distance);
+    }
+    return grouped;
+  }
+
+  aggregatePathDetails(key: string): Map<string, number> {
+    return this.paths().map(p => this.detailDistanceByValue(p, key)).reduce(
+      (prev, cur) => {
+        for (let [val, dist] of cur) {
+          const before = prev.has(val) ? prev.get(val) : 0;
+          prev.set(val, before + dist);
+        }
+        return prev;
+      }, new Map<string, number>()
+    );
+  }
 }
+

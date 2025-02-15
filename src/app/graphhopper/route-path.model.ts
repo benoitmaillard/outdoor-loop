@@ -10,7 +10,7 @@ export interface RoutePath {
   points: GeoJSONLineString;
   snapped_waypoints?: GeoJSONLineString;
   instructions: RouteInstruction[];
-  details?: PathDetails;
+  details: PathDetails;
   bbox?: [number, number, number, number];
   points_encoded: boolean;
   encoded_polyline?: string;
