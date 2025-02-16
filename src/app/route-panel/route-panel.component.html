@@ -88,7 +88,7 @@
         <div class="stat-title">{{ entry[0] | surface }}</div>
         <div class="stat-value text-base">{{ entry[1] | distance }}</div>
         <div class="stat-desc">
-          <progress class="progress" [value]="entry[1] / this.mapService.aggregateStats().distance * 100" max="100"></progress>
+          <progress [class]="$index | surfaceColor" [value]="entry[1] / this.mapService.aggregateStats().distance * 100" max="100"></progress>
         </div>
       </div>
     }    

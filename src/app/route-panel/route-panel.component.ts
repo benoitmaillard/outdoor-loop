@@ -4,10 +4,11 @@ import { MapService } from './../map-view/map.service';
 import { DistancePipe } from './distance.pipe';
 import { TimePipe } from './time.pipe';
 import { SurfacePipe } from './surface.pipe';
+import { SurfaceColorPipe } from './surface-color.pip';
 
 @Component({
   selector: 'app-route-panel',
-  imports: [CommonModule, DistancePipe, TimePipe, SurfacePipe],
+  imports: [CommonModule, DistancePipe, TimePipe, SurfacePipe, SurfaceColorPipe],
   templateUrl: './route-panel.component.html',
   styleUrl: './route-panel.component.css'
 })
