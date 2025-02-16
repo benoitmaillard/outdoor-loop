@@ -142,7 +142,7 @@ export class MapService {
     return {
       'distance': this.paths().map(p => p.distance).reduce((p, c) => p + c, 0),
       'time': this.paths().map(p => p.time).reduce((p, c) => p + c, 0),
-      'surface': this.aggregatePathDetails('surface'),
+      'surface': [...this.aggregatePathDetails('surface').entries()].sort(([s1, d1], [s2, d2]) => d1 < d2 ? 1 : -1),
     }
   }
 }
