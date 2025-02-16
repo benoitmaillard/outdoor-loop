@@ -85,7 +85,7 @@
     <h2 class="text-lg font-semibold">Surfaces</h2>
     @for (entry of this.mapService.aggregateStats().surface; track entry[0]) {
       <div class="stat">
-        <div class="stat-title">{{ entry[0] }}</div>
+        <div class="stat-title">{{ entry[0] | surface }}</div>
         <div class="stat-value text-base">{{ entry[1] | distance }}</div>
         <div class="stat-desc">
           <progress class="progress" [value]="entry[1] / this.mapService.aggregateStats().distance * 100" max="100"></progress>

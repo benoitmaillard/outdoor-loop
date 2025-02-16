@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { MapService } from './../map-view/map.service';
 import { DistancePipe } from './distance.pipe';
 import { TimePipe } from './time.pipe';
+import { SurfacePipe } from './surface.pipe';
 
 @Component({
   selector: 'app-route-panel',
-  imports: [CommonModule, DistancePipe, TimePipe],
+  imports: [CommonModule, DistancePipe, TimePipe, SurfacePipe],
   templateUrl: './route-panel.component.html',
   styleUrl: './route-panel.component.css'
 })
