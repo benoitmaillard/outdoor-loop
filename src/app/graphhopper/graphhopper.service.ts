@@ -12,11 +12,12 @@ import { Point } from '../map-view/point.model';
 export class GraphHopperService {
   constructor(private http: HttpClient) { }
   
-  computePath(waypoints: Point[]): Observable<RoutePath> {
+  computePath(waypoints: Point[], profile='car'): Observable<RoutePath> {
     let params = new HttpParams()
-      .set('profile', 'car')
+      .set('profile', profile)
       .set('format', 'json')
       .set('points_encoded', false)
+      .set('ch.disable', true) // does not work with other profiles than car by default
       .append('details', 'road_class')
       .append('details', 'surface')
     

@@ -3,11 +3,12 @@
     <span class="label-text">Routing profile</span>
   </div>
   <div class="join w-full max-w-xs flex">
-    <select class="select select-bordered join-item flex-1">
-      <option disabled selected>Pick one</option>
-      <option>Road bike</option>
-      <option>Gravel</option>
-      <option>Running</option>
+    <select class="select select-bordered join-item flex-1" [(ngModel)]="mapService.profile" (change)="selectProfile($event)">
+      <option value="foot">Walk</option>
+      <option value="bike">Bike</option>
+      <option value="racingbike">Road bike</option>
+      <option value="mtb">Mountain bike</option>
+      <option value="car">Car</option>
     </select>
     <button class="btn btn-primary join-item" onclick="my_modal.showModal()">Edit Profiles</button>
   </div>

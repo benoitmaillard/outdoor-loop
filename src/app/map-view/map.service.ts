@@ -16,6 +16,7 @@ export class MapService {
   private error = new Subject<string>();
   public aggregateStats = computed(() => this.computeStats());
   public errorStream = this.error.asObservable();
+  public profile = "racingbike";
 
   constructor(private graphhopperService: GraphHopperService) { }
 
@@ -96,12 +97,30 @@ export class MapService {
   }
 
   computePath(from: Point, target: Point): Observable<RoutePath> {
-    return this.graphhopperService.computePath([from, target]).pipe(
+    return this.graphhopperService.computePath([from, target], this.profile).pipe(
       catchError(e => {
         this.error.next("No valid point nearby")
         return throwError(() => e);
       })
     );
+  }
+
+  recomputePaths() {
+    const requests = new Array<Observable<RoutePath>>();
+    for (let i = 0; i < this.waypoints().length - 1; i++) {
+      requests.push(this.computePath(this.waypoints()[i], this.waypoints()[i+1]));
+    }
+
+    zip(requests).subscribe({
+      next: newPaths => {
+        this.paths.update(() => newPaths);
+      },
+      error: () => {
+        // if one of the waypoints is not valid with the profile, we reset the route
+        this.waypoints.update(() => []);
+        this.paths.update(() => []);
+      }
+    });
   }
 
   distanceBetweenPoints(routePath: RoutePath, from: number, to: number) {
