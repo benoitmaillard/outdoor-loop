@@ -42,8 +42,8 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
+          distribution: 'adopt'
           java-version: '17'
-          distribution: 'adoptopenjdk'
         
       # Install dependencies and run tests
       - name: Install dependencies and run backend tests
