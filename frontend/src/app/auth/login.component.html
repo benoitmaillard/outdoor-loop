@@ -9,19 +9,39 @@
     <div class="card-body">
       <h2 class="card-title text-center">Login</h2>
 
-      <form class="flex flex-col space-y-4">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col space-y-4">
         <label class="form-control w-full max-w-xs">
           <div class="label">
-            <span class="label-text">Username</span>
+            <span class="label-text">Email</span>
           </div>
-          <input type="text" class="input input-bordered w-full max-w-xs" />
+          <input type="text" formControlName="email" class="input input-bordered w-full max-w-xs" />
+          @let email = loginForm.get('email');
+          @if (email.invalid && email.touched) {
+            <div class="label">
+              <span class="label-text-alt text-error">
+                @if (email.errors['required']) {
+                  Email is required
+                }
+              </span>
+            </div>
+          }
         </label>
 
         <label class="form-control w-full max-w-xs">
           <div class="label">
             <span class="label-text">Password</span>
           </div>
-          <input type="password" class="input input-bordered w-full max-w-xs" />
+          <input type="password" formControlName="password" class="input input-bordered w-full max-w-xs" />
+          @let password = loginForm.get('password');
+          @if (password.invalid && password.touched) {
+            <div class="label">
+              <span class="label-text-alt text-error">
+                @if (password.errors['required']) {
+                  Password is required
+                }
+              </span>
+            </div>
+          }
         </label>
 
         <div class="form-control mt-4">
