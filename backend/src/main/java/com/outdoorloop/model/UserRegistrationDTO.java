@@ -2,6 +2,7 @@ package com.outdoorloop.model;
 
 import com.outdoorloop.validation.UniqueEmail;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -13,7 +14,7 @@ import lombok.*;
 @ToString
 public class UserRegistrationDTO {
     @Email
-    @NotNull
+    @NotBlank
     @UniqueEmail
     private String username;
 

@@ -14,7 +14,7 @@ import lombok.*;
 @ToString
 public class UserLoginDTO {
     @Email
-    @NotNull
+    @NotBlank
     private String username;
 
     @NotBlank
