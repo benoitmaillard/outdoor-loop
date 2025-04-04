@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RoutePlannerComponent } from './route-planner.component';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
+import { routes } from '../app.routes';
 
 describe('RoutePlannerComponent', () => {
   let component: RoutePlannerComponent;
@@ -8,7 +12,12 @@ describe('RoutePlannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RoutePlannerComponent]
+      imports: [RoutePlannerComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter(routes),
+      ]
     })
     .compileComponents();
 
