@@ -1,0 +1,79 @@
+<nav class="navbar bg-base-300 px-4">
+  <div class="flex-1">
+    <a class="btn btn-ghost text-xl">OutdoorLoop</a>
+  </div>
+</nav>
+
+<div class="flex items-center justify-center min-h-screen bg-base-200">
+  <div class="card w-96 bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h2 class="card-title text-center">Register a new account</h2>
+
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="flex flex-col space-y-4">
+        <label class="form-control w-full max-w-xs">
+          <div class="label">
+            <span class="label-text">Email address</span>
+          </div>
+          <input type="text" formControlName="email" class="input input-bordered w-full max-w-xs" />
+          @let email = signupForm.get('email');
+          @if (email.invalid && email.touched) {
+            <div class="label">
+              <span class="label-text-alt text-error">
+                @if (email.errors['required']) {
+                  Email is required
+                } @else if (email.errors['email']) {
+                  Must be a valid email address
+                }
+              </span>
+            </div>
+          }
+        </label>
+
+        <label class="form-control w-full max-w-xs">
+          <div class="label">
+            <span class="label-text">Password</span>
+          </div>
+          <input type="password" formControlName="password" class="input input-bordered w-full max-w-xs" />
+          @let password = signupForm.get('password');
+          @if (password.invalid && password.touched) {
+            <div class="label">
+              <span class="label-text-alt text-error">
+                @if (password.errors['required']) {
+                  Password is required
+                } @else if (password.errors['minlength']) {
+                  The password must have at least 8 characters
+                }
+              </span>
+            </div>
+          }
+        </label>
+
+        <label class="form-control w-full max-w-xs">
+          <div class="label">
+            <span class="label-text">Confirm password</span>
+          </div>
+          <input type="password" formControlName="passwordConfirmation" class="input input-bordered w-full max-w-xs" />
+          @let passwordConfirmation = signupForm.get('passwordConfirmation');
+          @if (signupForm.invalid && passwordConfirmation.touched) {
+            <div class="label">
+              <span class="label-text-alt text-error">
+                <!-- TODO why do we need the first boolean? it seems we get an error otherwise -->
+                @if (signupForm.errors && signupForm.errors['passwordDoNotMatch']) {
+                  The two passwords do not match
+                }
+              </span>
+            </div>
+          }
+        </label>
+
+        <div class="form-control mt-4">
+          <!-- <button class="btn btn-primary w-full" [class.btn-disabled] = "!signupForm.valid">Register</button> -->
+          <button class="btn btn-primary w-full">Register</button>
+        </div>
+      </form>
+      <p class="text-center mt-2">
+        Already have an account? <a href="/login" class="link link-primary">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>
