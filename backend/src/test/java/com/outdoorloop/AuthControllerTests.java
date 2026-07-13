@@ -14,7 +14,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -91,6 +92,11 @@ public class AuthControllerTests {
     @Test
     void loginWithRegisteredCredentials() throws Exception {
         registerWith("test@gmail.com", "aaaaaaaA1");
-        loginWith("test@gmail.com", "aaaaaaaA1").andExpect(status().isOk()).andExpect(jsonPath("$.token").exists());
+        loginWith("test@gmail.com", "aaaaaaaA1")
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andExpect(cookie().exists("token"))
+                .andExpect(cookie().httpOnly("token", true))
+                .andExpect(cookie().path("token", "/"));
     }
 }

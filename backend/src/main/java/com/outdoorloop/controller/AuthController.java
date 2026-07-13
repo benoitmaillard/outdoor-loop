@@ -8,6 +8,7 @@ import com.outdoorloop.security.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,7 +46,16 @@ public class AuthController {
         Optional<User> foundUser = userRepository.findByUsername(userLoginDTO.getUsername());
         if (foundUser.isPresent() && passwordEncoder.matches(userLoginDTO.getPassword(), foundUser.get().getPassword())) {
             String token = jwtUtil.generateToken(foundUser.get().getUsername());
-            return ResponseEntity.ok().body(Map.of("token", token));
+
+            ResponseCookie tokenCookie = ResponseCookie.from("token", token)
+                    .httpOnly(true)
+                    .path("/")
+                    .maxAge(60 * 60 * 10)
+                    .build();
+
+            return ResponseEntity.ok()
+                    .header("Set-Cookie", tokenCookie.toString())
+                    .build();
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
     }
