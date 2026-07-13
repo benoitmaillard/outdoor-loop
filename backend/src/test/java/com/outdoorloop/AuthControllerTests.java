@@ -10,10 +10,14 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.MvcResult;
+
+import jakarta.servlet.http.Cookie;
 
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -98,5 +102,24 @@ public class AuthControllerTests {
                 .andExpect(cookie().exists("token"))
                 .andExpect(cookie().httpOnly("token", true))
                 .andExpect(cookie().path("token", "/"));
+    }
+
+    @Test
+    void tokenCookieAuthenticatesProtectedRoute() throws Exception {
+        registerWith("test@gmail.com", "aaaaaaaA1");
+        MvcResult loginResult = loginWith("test@gmail.com", "aaaaaaaA1")
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Cookie tokenCookie = loginResult.getResponse().getCookie("token");
+
+        mockMvc.perform(get("/api/routes").cookie(tokenCookie))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void protectedRouteWithoutTokenIsForbidden() throws Exception {
+        mockMvc.perform(get("/api/routes"))
+                .andExpect(status().isForbidden());
     }
 }
